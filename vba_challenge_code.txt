@@ -1,0 +1,70 @@
+Ayannah Clouden
+vba_challenge
+Sub stock_analysis()
+    ' recieved assistance from, and referenced, xpert, class lecture, and microsoft support
+    Dim i As Double
+    Dim cell_vol As LongLong
+    Dim vol_total As LongLong
+    Dim ticker As String
+    
+    
+    Dim k As LongLong
+    
+    Dim ticker_close As Double
+    Dim ticker_open As Double
+    Dim changed_price As Double
+    Dim percent_change As Double
+    
+    Dim ws As Worksheet
+    
+    vol_total = 0
+    k = 2
+    
+    For Each ws In ThisWorkbook.Worksheets
+        ws.Range("i1").Value = "Ticker"
+        ws.Range("j1").Value = "Quarterly Change"
+        ws.Range("k1").Value = "Percent Change"
+        ws.Range("l1").Value = "Total Stock Volume"
+    ticker_open = ws.Cells(2, 3).Value
+    
+    
+       For i = 2 To 96001:
+            cell_vol = ws.Cells(i, 7).Value
+            ticker = ws.Cells(i, 1).Value
+            
+           If (ws.Cells(i + 1, 1).Value <> ticker) Then
+                vol_total = vol_total + cell_vol
+                
+                ticker_close = ws.Cells(i, 6).Value
+                changed_price = ticker_close - ticker_open
+                
+               If (ticker_open > 0) Then
+                    percent_change = changed_price / ticker_open
+               Else
+                    percent_change = 0
+               End If
+                
+                ws.Cells(k, 9).Value = ticker
+                ws.Cells(k, 10).Value = changed_price
+                ws.Cells(k, 12).Value = vol_total
+                ws.Cells(k, 11).Value = percent_change
+                
+               If (changed_price > 0) Then
+                    ws.Cells(k, 10).Interior.ColorIndex = 4
+               ElseIf (changed_price < 0) Then
+                    ws.Cells(k, 10).Interior.ColorIndex = 3
+               End If
+                
+                cc_total = 0
+                k = k + 1
+                ticker_open = ws.Cells(i + 1, 3).Value
+           Else
+                
+                vol_total = vol_total + cell_vol
+           End If
+                ws.Range("K2:K91").NumberFormat = "0.00%" ' recieved from xpert
+    Next i
+    Next ws
+End Sub
+
+
